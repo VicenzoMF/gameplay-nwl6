@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import * as SplashScreen from 'expo-splash-screen'; // Importe o SplashScreen
+import { StatusBar } from 'react-native';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import * as Font from 'expo-font';
+import { Inter_400Regular, Inter_500Medium } from '@expo-google-fonts/inter'
+import { Rajdhani_500Medium, Rajdhani_700Bold } from '@expo-google-fonts/rajdhani'
+
+import { Routes } from './src/routes'
+import { Background } from './src/components/Background';
+
+let customFonts = {
+  'Inter_400Regular': Inter_400Regular,
+  'Inter_500Medium': Inter_500Medium,
+  'Rajdhani_500Medium': Rajdhani_500Medium,
+  'Rajdhani_700Bold': Rajdhani_700Bold
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  async function loadFontsAsync() {
+    await Font.loadAsync(customFonts);
+    setFontsLoaded(true);
+  }
+
+  useEffect(() => {
+    loadFontsAsync();
+  }, []);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  return (
+    <Background>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      <Routes />
+    </Background>
+  );
+}
